@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\UsahaPengerajinController;
 use App\Http\Controllers\Admin\UsahaJenisController;
 use App\Http\Controllers\Admin\UsahaProdukController;
 use App\Http\Controllers\Guest\PageController;
+use App\Http\Controllers\Admin\ExportController;
 
 // Authentication Routes
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('loginForm');
@@ -110,9 +111,8 @@ Route::middleware(['role:admin'])->group(function () {
     Route::get('admin/usaha-produk/edit/{id}', [UsahaProdukController::class, 'edit'])->name('admin.usaha_produk-edit');
     Route::put('admin/usaha-produk/update/{id}', [UsahaProdukController::class, 'update'])->name('admin.usaha_produk-update');
     Route::delete('admin/usaha-produk/destroy/{id}', [UsahaProdukController::class, 'destroy'])->name('admin.usaha_produk-destroy');
+
+    // Export Pengerajin
+    Route::get('admin/export-data', [ExportController::class, 'index'])->name('admin.export-data');
+    Route::get('admin/export-pengerajin', [ExportController::class, 'exportPengerajin'])->name('admin.export-pengerajin');
 });
-
-
-
-
-

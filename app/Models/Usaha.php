@@ -18,13 +18,28 @@ class Usaha extends Model
         'status_usaha',
     ];
 
-    public function usahaJenis()
+    // public function usahaJenis()
+    // {
+    //     return $this->hasMany(UsahaJenis::class, 'usaha_id');
+    // }
+
+    // public function usahaPengerajin()
+    // {
+    //     return $this->hasMany(UsahaPengerajin::class, 'usaha_id');
+    // }
+
+    public function pengerajins()
     {
-        return $this->hasMany(UsahaJenis::class, 'usaha_id');
+        return $this->belongsToMany(Pengerajin::class, 'usaha_pengerajin', 'usaha_id', 'pengerajin_id');
     }
 
-    public function usahaPengerajin()
+    public function jenisUsahas()
     {
-        return $this->hasMany(UsahaPengerajin::class, 'usaha_id');
+        return $this->belongsToMany(JenisUsaha::class, 'usaha_jenis', 'usaha_id', 'jenis_usaha_id');
+    }
+
+    public function produks()
+    {
+        return $this->belongsToMany(Produk::class, 'usaha_produk', 'usaha_id', 'produk_id');
     }
 }

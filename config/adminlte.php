@@ -475,6 +475,11 @@ return [
             'url' => 'admin/usaha-produk',
             'icon' => 'fas fa-briefcase', // ikon untuk usaha/pekerjaan
         ],
+        [
+            'text' => 'Export Data',
+            'url' => 'admin/export-data',
+            'icon' => 'fas fa-file-export', // ikon untuk ekspor data
+        ],
 
     ],
 
