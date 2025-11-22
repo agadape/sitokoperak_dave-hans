@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 22, 2025 at 08:38 AM
+-- Generation Time: Nov 22, 2025 at 09:12 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -56,14 +56,6 @@ CREATE TABLE `cart_items` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `cart_items`
---
-
-INSERT INTO `cart_items` (`id`, `cart_id`, `produk_id`, `quantity`, `created_at`, `updated_at`) VALUES
-(12, 3, 6, 1, '2025-11-22 00:26:11', '2025-11-22 00:26:11'),
-(13, 3, 7, 1, '2025-11-22 00:26:28', '2025-11-22 00:26:28');
 
 -- --------------------------------------------------------
 
@@ -172,7 +164,59 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (11, '2025_04_17_151852_create_usaha_pengerajin_table', 1),
 (12, '2025_11_20_071644_add_profile_fields_to_users_table', 2),
 (13, '2025_11_20_154623_create_carts_and_cart_items_tables', 3),
-(14, '2025_11_22_055937_fix_cart_structure', 4);
+(14, '2025_11_22_055937_fix_cart_structure', 4),
+(15, '2025_11_22_074346_create_orders_and_order_items_tables', 5);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `order_number` varchar(255) NOT NULL,
+  `customer_name` varchar(255) NOT NULL,
+  `customer_phone` varchar(255) NOT NULL,
+  `customer_address` text NOT NULL,
+  `total_amount` bigint(20) NOT NULL,
+  `status` enum('baru','dibayar','diproses','dikirim','selesai','dibatalkan') NOT NULL DEFAULT 'baru',
+  `notes` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `user_id`, `order_number`, `customer_name`, `customer_phone`, `customer_address`, `total_amount`, `status`, `notes`, `created_at`, `updated_at`) VALUES
+(1, 4, 'ORD-20251122-0001', 'Dave Aryanda Agape', '082125422017', 'jl samironobaru no 25', 115000000, 'baru', NULL, '2025-11-22 00:49:04', '2025-11-22 00:49:04');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `order_id` bigint(20) UNSIGNED NOT NULL,
+  `produk_id` bigint(20) UNSIGNED NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price_at_purchase` bigint(20) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_id`, `produk_id`, `quantity`, `price_at_purchase`, `created_at`, `updated_at`) VALUES
+(1, 1, 6, 1, 25000000, '2025-11-22 00:49:04', '2025-11-22 00:49:04'),
+(2, 1, 7, 1, 90000000, '2025-11-22 00:49:04', '2025-11-22 00:49:04');
 
 -- --------------------------------------------------------
 
@@ -440,6 +484,22 @@ ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `orders_order_number_unique` (`order_number`),
+  ADD KEY `orders_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_items_order_id_foreign` (`order_id`),
+  ADD KEY `order_items_produk_id_foreign` (`produk_id`);
+
+--
 -- Indexes for table `pengerajin`
 --
 ALTER TABLE `pengerajin`
@@ -540,7 +600,19 @@ ALTER TABLE `kategori_produk`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `pengerajin`
@@ -606,6 +678,19 @@ ALTER TABLE `cart_items`
 --
 ALTER TABLE `foto_produk`
   ADD CONSTRAINT `foto_produk_produk_id_foreign` FOREIGN KEY (`produk_id`) REFERENCES `produk` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `order_items_produk_id_foreign` FOREIGN KEY (`produk_id`) REFERENCES `produk` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `produk`

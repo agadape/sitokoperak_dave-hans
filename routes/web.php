@@ -17,6 +17,8 @@ use App\Http\Controllers\Admin\UsahaProdukController;
 use App\Http\Controllers\Guest\PageController;
 use App\Http\Controllers\Admin\ExportController;
 use App\Http\Controllers\Guest\CartController;
+use App\Http\Controllers\Guest\CheckoutController;
+use App\Http\Controllers\Guest\CustomerDashboardController;
 
 // Authentication Routes
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('loginForm');
@@ -48,6 +50,26 @@ Route::get('produk/{slug}', [PageController::class, 'singleProduct'])->name('gue
 
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
+//Checkout
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/success/{orderNumber}', [CheckoutController::class, 'success'])->name('checkout.success');
+});
+
+//buat Dashboard customer
+Route::middleware('auth')->name('customer.')->group(function () {
+
+    // Dashboard Home → /customer/dashboard 
+    Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])
+        ->name('dashboard');
+    // Detail pesanan → /customer/orders/123
+    Route::get('/customer/orders/{order}', [CustomerDashboardController::class, 'orderDetail'])
+        ->name('order.detail');
+    // Update profil
+    Route::patch('/customer/profile', [CustomerDashboardController::class, 'updateProfile'])
+        ->name('profile.update');
+});
 
 Route::middleware(['role:admin'])->group(function () {
 

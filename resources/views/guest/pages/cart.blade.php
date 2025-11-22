@@ -127,7 +127,7 @@
                     </span>
                 </h4>
 
-                <a href="#" class="btn btn-success btn-lg px-5">
+                <a href="{{ route('checkout.index') }}" class="btn btn-success btn-lg px-5">
                     Checkout <i class="fa fa-arrow-right ms-2"></i>
                 </a>
             </div>
