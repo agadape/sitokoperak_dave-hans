@@ -46,6 +46,11 @@
 </head>
 
 <body>
+    @if (session('success'))
+        <div class="custom-alert-toast">
+            {{ session('success') }}
+        </div>
+    @endif
     <!-- ***** Preloader Start ***** -->
     <div id="preloader">
         <div class="jumper">
@@ -56,6 +61,17 @@
     </div>
     <!-- ***** Preloader End ***** -->
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const alertToast = document.querySelector('.custom-alert-toast');
+            if (alertToast) {
+                setTimeout(() => {
+                    alertToast.style.opacity = '0';
+                    setTimeout(() => alertToast.style.display = 'none', 500);
+                }, 5000); // Hide after 5 seconds
+            }
+        });
+    </script>
     <!-- ***** Header Area Start ***** -->
     <header class="shadow-sm fixed-top">
         <nav class="navbar navbar-expand-lg bg-white">
@@ -110,8 +126,16 @@
                                 <span class="d-none d-sm-inline">{{ Auth::user()->name ?? Auth::user()->username }}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Dashboard</a></li>
-                                <li><a class="dropdown-item" href="#">Pesanan Saya</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('customer.dashboard') }}">
+                                        Dashboard
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('customer.dashboard') }}#orders">
+                                        Pesanan Saya
+                                    </a>
+                                </li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
